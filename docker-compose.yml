@@ -1,0 +1,17 @@
+services:
+  nginx:
+    image: openresty/openresty:1.21.4.1-7-alpine-fat
+    volumes:
+      - ./nginx/default.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - ./lua:/lua
+    ports:
+      - "8080:80"
+      - "9090:9090"
+    depends_on:
+      - origin
+  origin:
+    build:
+      context: ./origin
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"

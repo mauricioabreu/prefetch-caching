@@ -47,7 +47,7 @@ local function prefetch_segment(premature, uri)
 end
 
 function _M.set_cache_status()
-    -- Check if this is a prefetch request
+    -- is a prefetch request?
     if ngx.req.get_headers()["X-Prefetch"] == "true" then
         ngx.log(ngx.INFO, "Skipping prefetch for a prefetch request")
         return
@@ -61,15 +61,20 @@ function _M.set_cache_status()
 
     ngx.log(ngx.INFO, "Link header: ", link_header)
 
-    local next_uri = link_header:match('<(.-)>; rel="next"')
-    if not next_uri then
+    local next_segment = link_header:match('<(.-)>; rel="next"')
+    if not next_segment then
         ngx.log(ngx.WARN, "No next URI found in Link header")
         return
     end
 
-    if not next_uri:match("^/") then
-        next_uri = "/" .. next_uri
+    local current_uri = ngx.var.request_uri
+    local base_path = current_uri:match("(.*/)")
+    if not base_path then
+        ngx.log(ngx.WARN, "Could not extract base path from current URI: ", current_uri)
+        return
     end
+
+    local next_uri = base_path .. next_segment:match("([^/]+)$")
 
     ngx.log(ngx.INFO, "Next URI: ", next_uri)
 

@@ -4,7 +4,7 @@ This is a proof of concept for a pretech caching system designed to download TS 
 
 ## How to run
 
-Starting the NGINX and the origin server is easy as:
+Starting the Origin Shield and the Origin server is easy as:
 ```bash
 make run
 ```

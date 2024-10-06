@@ -23,7 +23,7 @@ The prefetching is done asynchronously, so the client does not have to wait for 
 A simple workflow:
 
 - Check if each requested segment was prefetched;
-- After delivering a segment, it looks for information about the next segment (`Link` header);
+- After serving a segment, it looks for information about the next segment (`Link` header);
 - If a next segment is identified, it starts an asynchronous prefetch of that segment;
 - When the next segment is actually requested, serving it from the cache if it was successfully prefetched.
 

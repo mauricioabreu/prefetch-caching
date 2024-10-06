@@ -17,7 +17,7 @@ function _M.handle()
     end
 end
 
-local function prefetch_segment(premature, uri, host_port)
+local function prefetch_segment(premature, uri)
     if premature then return end
 
     local httpc = http.new()
@@ -29,7 +29,6 @@ local function prefetch_segment(premature, uri, host_port)
     local res, err = httpc:request_uri(url, {
         method = "GET",
         headers = {
-            ["Host"] = host_port,
             ["X-Prefetch"] = "true",  -- identify prefetch reqs
         }
     })
@@ -67,6 +66,7 @@ function _M.set_cache_status()
         ngx.log(ngx.WARN, "No next URI found in Link header")
         return
     end
+
     if not next_uri:match("^/") then
         next_uri = "/" .. next_uri
     end
@@ -79,9 +79,9 @@ function _M.set_cache_status()
         return
     end
 
-    prefetch_cache:set(cache_key, true, 60)
+    prefetch_cache:set(cache_key, true, 60) -- should we use cache-control from segment?
 
-    ngx.timer.at(0, prefetch_segment, next_uri, ngx.var.http_host)
+    ngx.timer.at(0, prefetch_segment, next_uri)
 end
 
 return _M

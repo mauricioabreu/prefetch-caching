@@ -39,6 +39,7 @@ func serveSegment(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "video/MP2T")
 	w.Header().Set("Link", fmt.Sprintf("<%d.ts>; rel=\"next\"", nextSegment))
+	w.Header().Set("Cache-Control", "max-age=15")
 
 	tsContent := []byte(fmt.Sprintf("Segment %d", currSegment))
 	w.Write(tsContent)

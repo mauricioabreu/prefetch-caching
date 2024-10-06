@@ -1,6 +1,8 @@
 services:
   nginx:
-    image: openresty/openresty:1.21.4.1-7-alpine-fat
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     volumes:
       - ./nginx/default.conf:/usr/local/openresty/nginx/conf/nginx.conf
       - ./lua:/lua
